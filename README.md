@@ -1,3 +1,30 @@
+# NanoVolt — Low-Field MRI Receiver Front-End ASIC
+
+**Team:** NanoVolt &nbsp;·&nbsp; **Event:** [SSCS Chipathon 2026](https://github.com/sscs-ose/sscs-chipathon-2026) &nbsp;·&nbsp; **PDK:** GlobalFoundries 180nm (gf180mcuD) &nbsp;·&nbsp; **Slot:** `workshop` (2935×2935 µm, 60 analog pads)
+
+NanoVolt's registered Chipathon 2026 project repo — a **fork of the GF180MCU workshop padring** ([Mauricio-xx/chipathon-2026-gf180mcu-padring](https://github.com/Mauricio-xx/chipathon-2026-gf180mcu-padring), tracked as the `upstream` remote) with the **IIC-OSIC-TOOLS analog design environment** folded in. It carries *two* flows:
+
+### 1. Analog design — your circuits (`designs/`)
+Schematic, simulation, and layout of the receiver front-end in xschem / ngspice / magic / klayout.
+```bash
+./start_chipathon_x.sh        # native X11  (or ./start_chipathon_vnc.sh for browser/VNC)
+# inside the container, work under /foss/designs (libs/core_analog, libs/tb_analog)
+```
+A complete **5T-OTA reference** (schematic, symbol, layout GDS, extracted netlist, SPICE + Python testbenches) ships in `designs/libs/` as a worked example.
+
+### 2. Chip integration — tapeout (`librelane/`, `src/`)
+Harden your analog block to GDS+LEF, instantiate it in `src/chip_core.sv`, wire it to the `analog[59:0]` pads, add it as a `MACRO` in `librelane/config.yaml`, then:
+```bash
+nix-shell && make clone-pdk && SLOT=workshop make librelane
+```
+Pad-by-pad map and floorplan: [`docs/workshop-slot-spec.md`](docs/workshop-slot-spec.md). **Do not delete** `ip/gf180mcu_ws_ip__id` (chip-ID, required on the shared wafer).
+
+**Pull padring updates from upstream:** `git fetch upstream && git merge upstream/main`.
+
+---
+
+> The original padring-template README follows, kept as reference.
+
 # chipathon-2026-gf180mcu-padring
 
 Chipathon 2026 workshop fork of the wafer-space `gf180mcu-project-template`.
