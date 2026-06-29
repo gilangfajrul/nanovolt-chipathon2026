@@ -1,0 +1,12 @@
+# NanoVolt block xschemrc -- copy this file into your block folder.
+# Loads the GF180MCU PDK, then the patched symbols that show gm/id/vgs/vds on
+# each transistor after an OP simulation (press Ctrl+I to annotate).
+
+source $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
+
+# Patched symbols (gm/id/vgs/vds) win over the PDK ones -- must come AFTER the
+# line above. If your repo is not at the path below, edit this one line.
+set XSCHEM_LIBRARY_PATH "/foss/designs/nanovolt-chipathon2026/designs/libs/gf180mcu_local/symbols:$XSCHEM_LIBRARY_PATH"
+
+# This block's own folder, so its local .sym files resolve.
+append XSCHEM_LIBRARY_PATH :[file normalize [file dirname [info script]]]
