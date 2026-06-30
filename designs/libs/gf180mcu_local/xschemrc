@@ -6,7 +6,10 @@ source $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
 
 # Patched symbols (gm/id/vgs/vds) win over the PDK ones -- must come AFTER the
 # line above. If your repo is not at the path below, edit this one line.
-set XSCHEM_LIBRARY_PATH "/foss/designs/nanovolt-chipathon2026/designs/libs/gf180mcu_local/symbols:$XSCHEM_LIBRARY_PATH"
+set XSCHEM_LIBRARY_PATH "/foss/designs/nanovolt-chipathon2026/designs/libs/gf180mcu_local:$XSCHEM_LIBRARY_PATH"
+
+# Adds the "GF180 > Create FET .save file" menu (auto .save for every FET).
+catch {source /foss/designs/nanovolt-chipathon2026/designs/libs/gf180mcu_local/fet_autosave.tcl}
 
 # This block's own folder, so its local .sym files resolve.
 append XSCHEM_LIBRARY_PATH :[file normalize [file dirname [info script]]]
