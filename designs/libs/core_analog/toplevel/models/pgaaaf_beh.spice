@@ -1,0 +1,39 @@
+* =====================================================================
+* pgaaaf_beh  --  behavioral PGA + Anti-Alias Filter (Block 3)
+* ---------------------------------------------------------------------
+* Fully-differential variable-gain stage followed by a 2nd-order
+* Butterworth low-pass (the AAF). Models:
+*   - programmable gain          (default 20 dB; steps 20/26/32/38/44 dB)
+*   - 2nd-order Butterworth LP   (fc = 4.0 MHz, Q = 0.707)
+*   - output swing limit         (2.0 Vpp differential -> full-scale to ADC)
+*
+* The Butterworth is realised with the XSPICE s_xfer code model:
+*   H(s) = 1 / ( a2*s^2 + a1*s + 1 ),  a2 = 1/wc^2, a1 = sqrt(2)/wc
+* (validated: -3 dB at 4.0 MHz, 0 dB passband.)
+*
+* Spec ref: 3.4  Block 3 PGA + AAF
+* Ports:  inp inn outp outn vcm
+* Param:  gain_db (override at instance to pick a gain step)
+* =====================================================================
+.subckt pgaaaf_beh inp inn outp outn vcm
+.param gain_db=20          ; PGA gain step [dB]: 20 26 32 38 44
+.param fc=4e6              ; AAF -3 dB corner (guard to 5 MHz Nyquist)
+.param vod_max=1.0         ; |outp-outn| limit -> 2.0 Vpp differential
+.param gain='10**(gain_db/20)'
+.param wc='2*3.14159265*fc'
+.param a2='1/(wc*wc)'
+.param a1='1.41421356/wc'  ; sqrt(2)/wc  -> Butterworth Q = 0.707
+
+* --- differential input + PGA gain ---
+Bvd  vd 0 V = V(inp)-V(inn)
+Bpga pg 0 V = gain*V(vd)
+
+* --- 2nd-order Butterworth anti-alias filter ---
+aaaf pg aaf butt2
+.model butt2 s_xfer(gain=1 num_coeff=[1] den_coeff=[a2 a1 1] int_ic=[0 0])
+
+* --- output swing limit (soft tanh clip) re-referenced to vcm ---
+Bvod  vod 0 V = vod_max*tanh(V(aaf)/vod_max)
+Boutp outp 0 V = V(vcm) + V(vod)/2
+Boutn outn 0 V = V(vcm) - V(vod)/2
+.ends

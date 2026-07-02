@@ -1,8 +1,9 @@
-v {xschem version=3.4.7 file_version=1.2}
+v {xschem version=3.4.8RC file_version=1.3}
 G {}
 K {}
 V {}
 S {}
+F {}
 E {}
 N 470 -220 470 -170 {
 lab=g}
@@ -144,6 +145,8 @@ value="
 .save @m.xm1.m0[vbs]
 .save @m.xm1.m0[vth]
 .save @m.xm1.m0[vdsat]
+.save onoise.m.xm1.m0.id
+.save onoise.m.xm1.m0.1overf
 "}
 C {devices/code_shown.sym} 0 -150 0 0 {name=MODELS only_toplevel=true
 format="tcleval( @value )"

@@ -1,0 +1,5 @@
+# xschemrc for the saradc testbenches.
+# Reuse the parent block-library rc so DUT symbols (cdac.sym, comparator.sym)
+# resolve when xschem is launched from this tb/ directory.
+source [file normalize [file dirname [info script]]/../xschemrc]
+append XSCHEM_LIBRARY_PATH :[file normalize [file dirname [info script]]]

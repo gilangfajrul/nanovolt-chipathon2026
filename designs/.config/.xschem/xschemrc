@@ -1,5 +1,8 @@
 # Source the PDK xschemrc file
 source $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
+# gm/id/vgs/vds overlay (NanoVolt) -- patched symbols win over the PDK ones.
+set XSCHEM_LIBRARY_PATH "/foss/designs/nanovolt-chipathon2026/designs/libs/gf180mcu_local:$XSCHEM_LIBRARY_PATH"
+catch {source /foss/designs/nanovolt-chipathon2026/designs/libs/gf180mcu_local/fet_autosave.tcl}
 
 # Set the library path so that xschem doesn't have to be launched at /foss/designs
 set XSCHEM_LIBRARY_PATH ${XSCHEM_LIBRARY_PATH}:$env(DESIGNS)

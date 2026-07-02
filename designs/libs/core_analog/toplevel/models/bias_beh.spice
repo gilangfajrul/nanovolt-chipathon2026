@@ -1,0 +1,19 @@
+* =====================================================================
+* bias_beh  --  behavioral bias / reference generator (Block 5)
+* ---------------------------------------------------------------------
+* Behavioral stand-in for the beta-multiplier reference. For a top-level
+* chain sim the only things the rest of the chain actually needs are:
+*   - vcm  : analog common-mode reference (mid-supply) for LNA/PGA outputs
+*   - vref : ADC reference voltage
+* The tail-current interface (ibias) is ideal at this abstraction level,
+* so it is not modelled here. Drop in the transistor version later.
+*
+* Spec ref: 3.6  (Vref = 2.5 V), 3.2/3.4 (outputs ref'd to mid-supply)
+* Ports:  vcm vref vss
+* =====================================================================
+.subckt bias_beh vcm vref vss
+.param vcm_val=1.65        ; mid-supply common mode (VDD/2 @ 3.3 V)
+.param vref_val=2.5        ; SAR ADC reference
+Vvcm  vcm  vss {vcm_val}
+Vvref vref vss {vref_val}
+.ends

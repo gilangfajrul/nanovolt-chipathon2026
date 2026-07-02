@@ -1,0 +1,27 @@
+* rx_chain DC gain
+
+* ---------------- Behavioral models ----------------
+.include /foss/designs/nanovolt-chipathon2026/designs/libs/core_analog/toplevel/models/bias_beh.spice
+.include /foss/designs/nanovolt-chipathon2026/designs/libs/core_analog/toplevel/models/lna_beh.spice
+.include /foss/designs/nanovolt-chipathon2026/designs/libs/core_analog/toplevel/models/pgaaaf_beh.spice
+.include /foss/designs/nanovolt-chipathon2026/designs/libs/core_analog/toplevel/models/saradc_beh.spice
+
+* ---------------- RX chain (flat for easy probing) ----------------
+xbias vcm vref 0 bias_beh
+xlna  inp inn lp ln vcm lna_beh
+xpga  lp ln pp pn vcm pgaaaf_beh gain_db=20
+xadc  pp pn clk dout saradc_beh
+
+* ---------------- DC differential stimulus ----------------
+Vinp inp vcm dc 5e-05
+Vinn inn vcm dc -5e-05
+Vclk clk 0 dc 0
+
+.control
+op
+print v(lp) v(ln) v(pp) v(pn) v(vcm) v(dout)
+let vod_lna = v(lp)-v(ln)
+let vod_pga = v(pp)-v(pn)
+print vod_lna vod_pga
+.endc
+.end

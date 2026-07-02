@@ -1,0 +1,134 @@
+#--------------------------------------------------------------
+# CACE characterization datasheet — StrongARM comparator (saradc)
+# Run from the saradc/ directory:   cace cace/comparator.yaml
+#--------------------------------------------------------------
+
+name:           comparator
+description:    StrongARM-latch comparator for the 10-bit SAR ADC
+PDK:            gf180mcuD
+cace_format:    5.2
+
+authorship:
+  designer:         Gilang Fajrul Falah
+  company:          NanoVolt (SSCS Chipathon 2026)
+  creation_date:    June 18, 2026
+  license:          Apache 2.0
+
+paths:
+  root:             ..
+  schematic:        .
+  netlist:          cace/netlist
+  documentation:    cace/doc
+  runs:             cace/runs
+
+pins:
+  vdd:
+    description: Positive supply
+    type: power
+    direction: inout
+    Vmin: 3.0
+    Vmax: 3.6
+  vss:
+    description: Ground
+    type: ground
+    direction: inout
+  vin1:
+    description: Positive input
+    type: signal
+    direction: input
+  vin2:
+    description: Negative input
+    type: signal
+    direction: input
+  clk:
+    description: Comparator clock
+    type: digital
+    direction: input
+  X:
+    description: Output X
+    type: signal
+    direction: output
+  Y:
+    description: Output Y
+    type: signal
+    direction: output
+
+default_conditions:
+  vdd:
+    description: Supply voltage
+    display: Vdd
+    unit: V
+    typical: 3.3
+  vcm:
+    description: Input common-mode voltage
+    display: Vcm
+    unit: V
+    typical: 1.65
+  vid:
+    description: Differential input (vin1-vin2)
+    display: Vid
+    unit: V
+    typical: 1e-3
+  corner:
+    description: Process corner (sm141064 section name)
+    display: Corner
+    typical: typical
+  temperature:
+    description: Ambient temperature
+    display: Temp
+    unit: °C
+    typical: 27
+
+parameters:
+
+  regen_time:
+    description: Regeneration time from clock edge to rail-to-rail resolve
+    display: Regen time
+    spec:
+      tregen:
+        display: Regeneration time
+        description: Time from the clk rising edge until |X-Y| reaches 0.9*VDD
+        unit: s
+        maximum:
+          value: 5e-9
+        typical:
+          value: any
+    tool:
+      ngspice:
+        template: tran.sch
+        format: ascii
+        suffix: .data
+        variables: [tregen]
+    conditions:
+      corner:
+        enumerate: [typical, ss, ff]
+      temperature:
+        minimum: -40
+        typical: 27
+        maximum: 125
+      vid:
+        typical: 1e-3
+
+  kickback:
+    description: Peak input disturbance through the CDAC source impedance
+    display: Kickback
+    spec:
+      kick:
+        display: Input kickback (peak-peak)
+        description: Largest excursion on vin1 over one clock cycle
+        unit: V
+        maximum:
+          value: any
+        typical:
+          value: any
+    tool:
+      ngspice:
+        template: kickback.sch
+        format: ascii
+        suffix: .data
+        variables: [kick]
+    conditions:
+      corner:
+        enumerate: [typical]
+      temperature:
+        typical: 27

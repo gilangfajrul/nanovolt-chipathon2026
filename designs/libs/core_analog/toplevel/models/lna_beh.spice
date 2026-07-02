@@ -1,0 +1,48 @@
+* =====================================================================
+* lna_beh  --  behavioral Instrumentation Amplifier / LNA (Block 1)
+* ---------------------------------------------------------------------
+* Fully-differential gain stage. Captures the system-level non-idealities
+* that the chain sim needs to see:
+*   - fixed differential gain          (40 dB = 100 V/V)
+*   - finite bandwidth (dominant pole)  -> BW > 10 MHz spec
+*   - finite CMRR (common-mode leakage) -> CMRR > 80 dB spec
+*   - output swing limit (soft clip)    -> 2.0 Vpp differential max
+*
+* Model:   vod = clip( gain*(vinp-vinn) + acm*vcm_in ,  +-vod_max )
+*          single real pole at fp on the forward path
+*          outp/outn = vcm +/- vod/2
+*
+* Input-referred noise (< 1 nV/rtHz spec) is NOT baked into the model
+* (trnoise needs a nonzero amplitude and would break the ideal ENOB run).
+* For a noise study, inject it at the testbench with fixture.netlist_input_noise().
+*
+* Spec ref: 3.2  Block 1 INA
+* Ports:  inp inn outp outn vcm
+* =====================================================================
+.subckt lna_beh inp inn outp outn vcm
+.param gain=100            ; 40 dB differential gain
+.param fp=15e6             ; dominant pole (> 10 MHz -3 dB BW target)
+.param cmrr_db=80          ; common-mode rejection
+.param vod_max=1.0         ; |outp-outn| limit -> 2.0 Vpp differential
+.param acm='gain/(10**(cmrr_db/20))'   ; common-mode gain
+.param rpole=1k
+.param cpole='1/(2*3.14159265*fp*rpole)'
+
+* --- differential and common-mode input ---
+Bvd     vd 0 V = V(inp)-V(inn)
+Bvc     vc 0 V = (V(inp)+V(inn))/2
+
+* --- differential gain + common-mode leakage ---
+* CMRR acts on the common-mode DEVIATION from the reference vcm, so a
+* nominal CM level (= vcm) produces no differential offset.
+Bg      gnode 0 V = gain*V(vd) + acm*(V(vc)-V(vcm))
+
+* --- dominant pole (RC, high-Z loaded by next stage) ---
+Rp      gnode vfilt {rpole}
+Cp      vfilt 0 {cpole}
+
+* --- output swing limit (soft tanh clip) re-referenced to vcm ---
+Bvod    vod 0 V = vod_max*tanh(V(vfilt)/vod_max)
+Boutp   outp 0 V = V(vcm) + V(vod)/2
+Boutn   outn 0 V = V(vcm) - V(vod)/2
+.ends

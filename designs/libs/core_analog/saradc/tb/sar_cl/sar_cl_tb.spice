@@ -1,0 +1,324 @@
+* SAR closed-loop reactive TB (code reproduction)
+x1 dnN[8] dnN[7] dnN[6] dnN[5] dnN[4] dnN[3] dnN[2] dnN[1] dnN[0] upN[8] upN[7] upN[6] upN[5] upN[4] upN[3] upN[2] upN[1] upN[0]
++ dnP[8] dnP[7] dnP[6] dnP[5] dnP[4] dnP[3] dnP[2] dnP[1] dnP[0] upP[8] upP[7] upP[6] upP[5] upP[4] upP[3] upP[2] upP[1] upP[0] topn topp
++ vss vrefn vcm vrefp sample vinn vinp cdac
+x2 vdd vss x topn y topp clk comparator
+
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice cap_mim
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice mimcap_typical
+
+Vvdd vdd 0 3.3
+Vvss vss 0 0
+Vvrefp vrefp 0 1
+Vvrefn vrefn 0 0
+Vvcm vcm 0 0.5
+Vsample sample 0 PWL(0 3.3 9n 3.3 9.05n 0)
+Vclk clk 0 pulse(0 3.3 15n 50p 50p 4n 10n)
+Cx x 0 20f
+Cy y 0 20f
+
+.param CM = 1.65
+.param vid = 0.9385
+Vvinp vinp 0 'CM+vid/2'
+Vvinn vinn 0 'CM-vid/2'
+
+VupP8 upP[8] 0 0
+VupP7 upP[7] 0 0
+VupP6 upP[6] 0 0
+VupP5 upP[5] 0 0
+VupP4 upP[4] 0 0
+VupP3 upP[3] 0 0
+VupP2 upP[2] 0 0
+VupP1 upP[1] 0 0
+VupP0 upP[0] 0 0
+VdnP8 dnP[8] 0 0
+VdnP7 dnP[7] 0 0
+VdnP6 dnP[6] 0 0
+VdnP5 dnP[5] 0 0
+VdnP4 dnP[4] 0 0
+VdnP3 dnP[3] 0 0
+VdnP2 dnP[2] 0 0
+VdnP1 dnP[1] 0 0
+VdnP0 dnP[0] 0 0
+VupN8 upN[8] 0 0
+VupN7 upN[7] 0 0
+VupN6 upN[6] 0 0
+VupN5 upN[5] 0 0
+VupN4 upN[4] 0 0
+VupN3 upN[3] 0 0
+VupN2 upN[2] 0 0
+VupN1 upN[1] 0 0
+VupN0 upN[0] 0 0
+VdnN8 dnN[8] 0 0
+VdnN7 dnN[7] 0 0
+VdnN6 dnN[6] 0 0
+VdnN5 dnN[5] 0 0
+VdnN4 dnN[4] 0 0
+VdnN3 dnN[3] 0 0
+VdnN2 dnN[2] 0 0
+VdnN1 dnN[1] 0 0
+VdnN0 dnN[0] 0 0
+
+.tran 20p 112n uic
+
+.control
+set noaskquit
+save x topp topn
+stop when time = 18.6n
+stop when time = 28.6n
+stop when time = 38.6n
+stop when time = 48.6n
+stop when time = 58.6n
+stop when time = 68.6n
+stop when time = 78.6n
+stop when time = 88.6n
+stop when time = 98.6n
+stop when time = 108.6n
+run
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b9 = 1
+  alter VdnP8 = 3.3
+  alter VupN8 = 3.3
+else
+  let b9 = 0
+  alter VupP8 = 3.3
+  alter VdnN8 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b8 = 1
+  alter VdnP7 = 3.3
+  alter VupN7 = 3.3
+else
+  let b8 = 0
+  alter VupP7 = 3.3
+  alter VdnN7 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b7 = 1
+  alter VdnP6 = 3.3
+  alter VupN6 = 3.3
+else
+  let b7 = 0
+  alter VupP6 = 3.3
+  alter VdnN6 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b6 = 1
+  alter VdnP5 = 3.3
+  alter VupN5 = 3.3
+else
+  let b6 = 0
+  alter VupP5 = 3.3
+  alter VdnN5 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b5 = 1
+  alter VdnP4 = 3.3
+  alter VupN4 = 3.3
+else
+  let b5 = 0
+  alter VupP4 = 3.3
+  alter VdnN4 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b4 = 1
+  alter VdnP3 = 3.3
+  alter VupN3 = 3.3
+else
+  let b4 = 0
+  alter VupP3 = 3.3
+  alter VdnN3 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b3 = 1
+  alter VdnP2 = 3.3
+  alter VupN2 = 3.3
+else
+  let b3 = 0
+  alter VupP2 = 3.3
+  alter VdnN2 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b2 = 1
+  alter VdnP1 = 3.3
+  alter VupN1 = 3.3
+else
+  let b2 = 0
+  alter VupP1 = 3.3
+  alter VdnN1 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b1 = 1
+  alter VdnP0 = 3.3
+  alter VupN0 = 3.3
+else
+  let b1 = 0
+  alter VupP0 = 3.3
+  alter VdnN0 = 3.3
+end
+resume
+let nlast = length(v(x)) - 1
+let xlast = v(x)[nlast]
+if (xlast > 1.65)
+  let b0 = 1
+else
+  let b0 = 0
+end
+let code = b9*512 + b8*256 + b7*128 + b6*64 + b5*32 + b4*16 + b3*8 + b2*4 + b1*2 + b0*1
+echo "RESULT_CODE_BELOW"
+print code
+print b9 b8 b7 b6 b5 b4 b3 b2 b1 b0
+.endc
+
+.subckt cdac dnN[8] dnN[7] dnN[6] dnN[5] dnN[4] dnN[3] dnN[2] dnN[1] dnN[0] upN[8] upN[7] upN[6] upN[5] upN[4] upN[3] upN[2]
++ upN[1] upN[0] dnP[8] dnP[7] dnP[6] dnP[5] dnP[4] dnP[3] dnP[2] dnP[1] dnP[0] upP[8] upP[7] upP[6] upP[5] upP[4] upP[3] upP[2] upP[1]
++ upP[0] topn topp vss vrefn vcm vrefp sample vinn vinp
+*.ipin vinp
+*.ipin vinn
+*.ipin sample
+*.ipin vrefp
+*.ipin vcm
+*.ipin vrefn
+*.iopin vss
+*.opin topp
+*.opin topn
+*.ipin upP[8],upP[7],upP[6],upP[5],upP[4],upP[3],upP[2],upP[1],upP[0]
+*.ipin dnP[8],dnP[7],dnP[6],dnP[5],dnP[4],dnP[3],dnP[2],dnP[1],dnP[0]
+*.ipin upN[8],upN[7],upN[6],upN[5],upN[4],upN[3],upN[2],upN[1],upN[0]
+*.ipin dnN[8],dnN[7],dnN[6],dnN[5],dnN[4],dnN[3],dnN[2],dnN[1],dnN[0]
+SsampP topp vinp sample vss CDSW
+XAP topp bP8 bP7 bP6 bP5 bP4 bP3 bP2 bP1 bP0 vcm cap_array
+XMP8 bP8 vrefp vcm vrefn upP[8] dnP[8] vss mux3
+XMP7 bP7 vrefp vcm vrefn upP[7] dnP[7] vss mux3
+XMP6 bP6 vrefp vcm vrefn upP[6] dnP[6] vss mux3
+XMP5 bP5 vrefp vcm vrefn upP[5] dnP[5] vss mux3
+XMP4 bP4 vrefp vcm vrefn upP[4] dnP[4] vss mux3
+XMP3 bP3 vrefp vcm vrefn upP[3] dnP[3] vss mux3
+XMP2 bP2 vrefp vcm vrefn upP[2] dnP[2] vss mux3
+XMP1 bP1 vrefp vcm vrefn upP[1] dnP[1] vss mux3
+XMP0 bP0 vrefp vcm vrefn upP[0] dnP[0] vss mux3
+XAN topn bN8 bN7 bN6 bN5 bN4 bN3 bN2 bN1 bN0 vcm cap_array
+XMN8 bN8 vrefp vcm vrefn upN[8] dnN[8] vss mux3
+XMN7 bN7 vrefp vcm vrefn upN[7] dnN[7] vss mux3
+XMN6 bN6 vrefp vcm vrefn upN[6] dnN[6] vss mux3
+XMN5 bN5 vrefp vcm vrefn upN[5] dnN[5] vss mux3
+XMN4 bN4 vrefp vcm vrefn upN[4] dnN[4] vss mux3
+XMN3 bN3 vrefp vcm vrefn upN[3] dnN[3] vss mux3
+XMN2 bN2 vrefp vcm vrefn upN[2] dnN[2] vss mux3
+XMN1 bN1 vrefp vcm vrefn upN[1] dnN[1] vss mux3
+XMN0 bN0 vrefp vcm vrefn upN[0] dnN[0] vss mux3
+SsampN topn vinn sample vss CDSW
+**** begin user architecture code
+
+.model CDSW SW VT=0.9 VH=0.01 RON=0.01 ROFF=10G
+
+**** end user architecture code
+.ends
+
+.subckt comparator vdd vss X vin1 Y vin2 clk
+*.iopin vdd
+*.iopin vss
+*.ipin vin1
+*.ipin vin2
+*.ipin clk
+*.opin X
+*.opin Y
+XM1 P vin1 net1 vss nfet_03v3 L=0.5u W=4u nf=4 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM2 Q vin2 net1 vss nfet_03v3 L=0.5u W=4u nf=4 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM3 X Y P vss nfet_03v3 L=0.28u W=2u nf=2 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM4 Y X Q vss nfet_03v3 L=0.28u W=2u nf=2 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM5 X Y vdd vdd pfet_03v3 L=0.28u W=6u nf=2 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM6 Y X vdd vdd pfet_03v3 L=0.28u W=6u nf=2 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM7 net1 clk vss vss nfet_03v3 L=0.28u W=6u nf=4 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM8 X clk vdd vdd pfet_03v3 L=0.28u W=2u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM9 P clk vdd vdd pfet_03v3 L=0.28u W=2u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM10 Y clk vdd vdd pfet_03v3 L=0.28u W=2u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+XM11 Q clk vdd vdd pfet_03v3 L=0.28u W=2u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+.ends
+
+.subckt cap_array top b8 b7 b6 b5 b4 b3 b2 b1 b0 bd
+*.iopin top
+*.iopin b8
+*.iopin b7
+*.iopin b6
+*.iopin b5
+*.iopin b4
+*.iopin b3
+*.iopin b2
+*.iopin b1
+*.iopin b0
+*.iopin bd
+XCb8 top b8 cap_mim_2f0fF c_width=14.14u c_length=14.14u m=256
+XCb7 top b7 cap_mim_2f0fF c_width=14.14u c_length=14.14u m=128
+XCb6 top b6 cap_mim_2f0fF c_width=14.14u c_length=14.14u m=64
+XCb5 top b5 cap_mim_2f0fF c_width=14.14u c_length=14.14u m=32
+XCb4 top b4 cap_mim_2f0fF c_width=14.14u c_length=14.14u m=16
+XCb3 top b3 cap_mim_2f0fF c_width=14.14u c_length=14.14u m=8
+XCb2 top b2 cap_mim_2f0fF c_width=14.14u c_length=14.14u m=4
+XCb1 top b1 cap_mim_2f0fF c_width=14.14u c_length=14.14u m=2
+XCb0 top b0 cap_mim_2f0fF c_width=14.14u c_length=14.14u
+XCd top bd cap_mim_2f0fF c_width=14.14u c_length=14.14u
+.ends
+
+.subckt mux3 out vrefp vcm vrefn up dn vss
+*.iopin out
+*.iopin vrefp
+*.iopin vcm
+*.iopin vrefn
+*.ipin up
+*.ipin dn
+*.iopin vss
+Sp out vrefp up vss CDSW
+Sm out vcm mid vss CDSW
+Sn out vrefn dn vss CDSW
+**** begin user architecture code
+
+Bmid mid vss V=((v(up,vss)<1.65)*(v(dn,vss)<1.65))*3.3
+
+**** end user architecture code
+**** begin user architecture code
+
+.model CDSW SW VT=0.9 VH=0.01 RON=0.01 ROFF=10G
+
+**** end user architecture code
+.ends
+.end

@@ -1,8 +1,9 @@
-v {xschem version=3.4.7 file_version=1.2}
+v {xschem version=3.4.8RC file_version=1.3}
 G {}
 K {}
 V {}
 S {}
+F {}
 E {}
 N 650 -210 650 -110 {
 lab=GND}
@@ -128,6 +129,8 @@ value="
 .save @m.xm1.m0[vbs]
 .save @m.xm1.m0[vth]
 .save @m.xm1.m0[vdsat]
+.save onoise.m.xm1.m0.id
+.save onoise.m.xm1.m0.1overf
 "}
 C {devices/ccvs.sym} 870 -160 0 0 {name=H4 vnam=vd value=1}
 C {devices/gnd.sym} 870 -110 0 0 {name=l6 lab=GND}

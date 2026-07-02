@@ -1,0 +1,16 @@
+# CACE template xschemrc for the saradc comparator.
+# Sources the GF180 PDK xschemrc, then adds the DUT schematic dir (saradc/)
+# and this templates/ dir to the symbol library path so comparator.sym resolves.
+
+if {![info exists PDK]} {
+    if {[info exists env(PDK)]} { set PDK $env(PDK) } else { set PDK gf180mcuD }
+}
+source $env(PDK_ROOT)/$PDK/libs.tech/xschem/xschemrc
+# gm/id/vgs/vds overlay (NanoVolt) -- patched symbols win over the PDK ones.
+set XSCHEM_LIBRARY_PATH "/foss/designs/nanovolt-chipathon2026/designs/libs/gf180mcu_local:$XSCHEM_LIBRARY_PATH"
+catch {source /foss/designs/nanovolt-chipathon2026/designs/libs/gf180mcu_local/fet_autosave.tcl}
+
+# saradc/ (two levels up from cace/templates/) holds comparator.sch + comparator.sym
+append XSCHEM_LIBRARY_PATH :[file normalize [file dirname [info script]]/../..]
+# this templates/ dir
+append XSCHEM_LIBRARY_PATH :[file dirname [info script]]

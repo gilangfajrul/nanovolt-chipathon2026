@@ -1,0 +1,23 @@
+* =====================================================================
+* rx_chain  --  NanoVolt low-field MRI RX front-end, behavioral top level
+* ---------------------------------------------------------------------
+* Signal flow:   inp/inn --[LNA 40dB]--> lp/ln --[PGA+AAF]--> pp/pn
+*                       --[10b SAR @10MSPS]--> dout
+*
+* Intermediate nodes (lp ln pp pn vcm vref) are exposed as ports purely
+* as monitor taps so the testbench can probe each stage at top level.
+*
+* Requires the four behavioral models to be .include'd by the caller:
+*   models/bias_beh.spice  lna_beh.spice  pgaaaf_beh.spice  saradc_beh.spice
+*
+* Param:  pga_gain_db  -> selects the PGA gain step (20/26/32/38/44 dB)
+* Ports:  inp inn clk dout vss   lp ln pp pn vcm vref
+* =====================================================================
+.subckt rx_chain inp inn clk dout vss lp ln pp pn vcm vref
++ pga_gain_db=20
+
+xbias vcm vref vss bias_beh
+xlna  inp inn lp ln vcm lna_beh
+xpga  lp ln pp pn vcm pgaaaf_beh gain_db={pga_gain_db}
+xadc  pp pn clk dout saradc_beh
+.ends

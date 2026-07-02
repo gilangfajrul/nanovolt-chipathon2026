@@ -1,0 +1,34 @@
+* =====================================================================
+* saradc_beh  --  behavioral 10-bit SAR ADC (Block 4)
+* ---------------------------------------------------------------------
+* Ideal sampled-data quantizer. Models the two things the chain sim must
+* check: real SAMPLING (so aliasing past Nyquist is visible -> proves the
+* AAF earns its place) and QUANTIZATION (10-bit -> ENOB/SNDR ceiling).
+*
+*   - track & hold : voltage switch + hold cap, clocked at fs (10 MSPS)
+*   - quantizer    : mid-tread, N bits over +-FS/2 differential, clipped
+*   - output dout  : reconstructed analog code, centred on 0 V
+*                    (FFT dout sampled on the fs grid -> SNDR/ENOB)
+*
+* Aperture = clk low (hold). Sample the input on the clk falling edge.
+*
+* Spec ref: 3.5  Block 4 SAR ADC
+* Ports:  inp inn clk dout
+* =====================================================================
+.subckt saradc_beh inp inn clk dout
+.param nbits=10
+.param fs=2.0              ; full-scale differential input span [V] (vd in +-1.0)
+.param lsb='fs/(2**nbits)'
+.param vthclk=1.65         ; clk logic threshold
+
+* --- differential input ---
+Bvd vd 0 V = V(inp)-V(inn)
+
+* --- track & hold: switch closed while clk high, holds when clk low ---
+Ssh vd vhold clk 0 swadc
+.model swadc sw(vt=vthclk ron=50 roff=1e9)
+Chold vhold 0 0.5p
+
+* --- mid-tread quantizer (clipped to [-FS/2, +FS/2 - LSB/2]) ---
+Bq dout 0 V = floor( (min(max(V(vhold),-fs/2),fs/2-lsb/2) + fs/2)/lsb )*lsb - fs/2 + lsb/2
+.ends

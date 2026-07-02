@@ -1,4 +1,6 @@
 runs/
+simulation/
+*.raw
 __pycache__/
 gf180mcu/
 gf180_drc.lyrdb
@@ -7,3 +9,14 @@ final/
 img/
 *.lyrdb
 .ipynb_checkpoints/
+
+# Personal design notes / professor reports (private, not for the public repo)
+docs/notes/
+
+# SAR sim-vs-theory progress report + item working data (private)
+designs/libs/core_analog/saradc/tb/report/
+designs/libs/core_analog/saradc/tb/cdac_static/
+
+# Large regenerable gm/ID sizing intermediates (repo distributes the .mat.gz)
+designs/Sizing/*.mat
+designs/Sizing/techsweep_*.txt

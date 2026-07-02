@@ -1,0 +1,21 @@
+
+Note: Compatibility modes selected: hs a
+
+
+Circuit: * rx_chain dc gain
+
+Reducing trtol to 1 for xspice 'A' devices
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+v(lp) = 1.663247e+00
+v(ln) = 1.636753e+00
+v(pp) = 1.650000e+00
+v(pn) = 1.650000e+00
+v(vcm) = 1.650000e+00
+v(dout) = 9.765625e-04
+vod_lna = 2.649380e-02
+vod_pga = 0.000000e+00
+Note: Simulation executed from .control section 
